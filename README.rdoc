@@ -1,0 +1,50 @@
+= ActiveRecord CSV
+
+This gem aids in ActiveRecord export/import of CSV files.
+It depends on the active_record_to_csv gem for export and
+it depends on the orm_from_csv gem to help in importing.
+
+== Usage
+
+=== Export
+
+  File.new('movies.csv', 'w') { |f| f.write Movie.to_csv }
+
+See Download section below for an easy way to integrate this gem for downloading CSV files.
+
+=== Import
+
+  # To import from a csv file:
+  Movie.from_csv!(csv_file)
+  # To create objects but not save them yet:
+  Movie.from_csv(csv_file) # without bang!
+
+=== Download
+
+If you want your Rails app to download CSV files, try something like this:
+
+  # app/controllers/movies_controllers.rb
+  class MoviesController < ApplicationController
+    respond_to :csv, :html
+
+    def index
+      @movies = Movie.scoped # Movie.all behaves differently when to_csv is called on it.
+      respond_with(@movies)
+    end
+
+  end
+
+  # config/initializers/renderers.rb
+  ActionController::Renderers.add :csv do |object, options|
+    self.content_type ||= Mime::CSV
+    filename = "#{options[:filename] || object.first.class.name.pluralize}.csv"
+    send_data(object.to_csv, :filename => filename, :type => Mime::CSV, :disposition => "attachment")
+  end
+
+Now '/movies.csv' will download a CSV file from the browser.
+
+== Compatibility
+
+Tested with ActiveRecord 3.0.5.
+
+http://gem-testers.org/gems/active_record_csv
