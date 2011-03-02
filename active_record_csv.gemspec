@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency 'activerecord', '>= 3.0.0'
-  s.add_dependency 'active_record_to_csv', '0.1.4'
+  s.add_dependency 'active_record_to_csv', '0.2.0'
   s.add_dependency 'orm_from_csv', '0.1.0'
 
   s.add_development_dependency 'database_cleaner', '0.6.4'
